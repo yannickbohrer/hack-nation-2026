@@ -1,0 +1,8 @@
+# Genome Firewall — Python dependencies
+# Install: pip install -r requirements.txt
+
+biopython>=1.80
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+pyarrow>=12.0

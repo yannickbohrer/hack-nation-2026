@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-07-18T20:11:43.834271+00:00",
+  "fasta_path": "FASTA_testing_data/511145.12.fasta",
+  "output_dir": "FASTA_testing_data/output",
+  "organism": "Escherichia",
+  "steps": {
+    "validation": {
+      "is_valid": true,
+      "num_records": 1,
+      "total_length": 4641652,
+      "n50": 4641652,
+      "gc_content": 50.79070985933456,
+      "errors": [],
+      "warnings": []
+    },
+    "amrfinder": {
+      "success": true,
+      "output_tsv": "FASTA_testing_data/output/amrfinder_output/511145.12_amrfinder.tsv",
+      "num_amr_genes": 3,
+      "num_point_mutations": 0,
+      "num_stress_genes": 2,
+      "num_virulence_genes": 0,
+      "error": null
+    },
+    "feature_matrix": {
+      "success": true,
+      "matrix_path": "FASTA_testing_data/output/features/feature_matrix.csv",
+      "metadata_path": "FASTA_testing_data/output/features/feature_metadata.csv",
+      "num_samples": 1,
+      "num_features": 3,
+      "sparsity": 0.0
+    }
+  },
+  "success": true
+}

@@ -1,0 +1,4 @@
+feature_name,feature_type,amr_class,amr_subclass,element_type,prevalence
+gene_acrF,amr_gene,EFFLUX,EFFLUX,AMR,1.0
+gene_blaEC,amr_gene,BETA-LACTAM,BETA-LACTAM,AMR,1.0
+gene_mdtM,amr_gene,EFFLUX,EFFLUX,AMR,1.0
