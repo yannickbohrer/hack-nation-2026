@@ -157,6 +157,36 @@ def main():
     coefficients_df = coefficients_df[coefficients_df["antibiotic"].isin(usable_antibiotics)]
     coefficients_df.to_csv(OUTPUT_DIR / "model_coefficients.csv", index=False)
 
+    # --- reliability (calibration) plots, restricted to usable antibiotics ---
+    reliability_src_dir = SOURCE_DIR / "plots" / "reliability"
+    reliability_dst_dir = OUTPUT_DIR / "plots" / "reliability"
+    reliability_dst_dir.mkdir(parents=True, exist_ok=True)
+    copied_plots = []
+    for antibiotic in usable_antibiotics:
+        safe_name = antibiotic.replace("/", "_")
+        src = reliability_src_dir / f"reliability_{safe_name}.png"
+        if src.exists():
+            shutil.copy2(src, reliability_dst_dir / src.name)
+            copied_plots.append(src.name)
+        else:
+            print(f"WARNING: no reliability plot found for {antibiotic!r} at {src}")
+
+    # --- per-genetic-cluster metrics, restricted to usable antibiotics ---
+    # Per-cluster breakdown fulfills the brief's "report performance broken down by
+    # genetically related groups" requirement. Most Mash clusters are singletons or
+    # very small (see mash_preprocessed_data/usability_tradeoff_mash_002.md) so most
+    # rows here are NOT individually statistically stable — that's why
+    # small_group_warning (n_samples < 10) is carried through rather than filtered
+    # out silently. Use it to decide whether to trust a given row.
+    group_metrics_path = SOURCE_DIR / "metrics" / "per_genetic_group_metrics.csv"
+    if group_metrics_path.exists():
+        group_metrics_df = pd.read_csv(group_metrics_path)
+        group_metrics_df = group_metrics_df[group_metrics_df["antibiotic"].isin(usable_antibiotics)]
+        group_metrics_df.to_csv(OUTPUT_DIR / "metrics_by_cluster.csv", index=False)
+    else:
+        print(f"WARNING: {group_metrics_path} not found — metrics_by_cluster.csv not written.")
+        group_metrics_df = pd.DataFrame()
+
     # --- metadata ---
     metadata = {
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -183,6 +213,9 @@ def main():
         "n_experimental_demo_only": int(len(experimental_df)),
         "usable_antibiotics": usable_antibiotics,
         "excluded_from_model_features": ["genome_id", "antibiotic", "is_resistant", "cluster_id", "split"],
+        "supported_species": "Escherichia coli",
+        "reliability_plots_copied": copied_plots,
+        "metrics_by_cluster_written": bool(not group_metrics_df.empty),
         "safety_warning": (
             "Research prototype. Every prediction must be confirmed with standard "
             "laboratory susceptibility testing."

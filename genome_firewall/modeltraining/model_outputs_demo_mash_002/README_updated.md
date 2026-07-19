@@ -150,14 +150,23 @@ brief:
   resistant strains tend to carry both, not because it causes fluoroquinolone resistance.
   `top_supporting_features`/`model_coefficients.csv` already carry the explicit "does not prove
   causation" wording — this field makes the causal-vs-correlational distinction machine-readable.
-- `no_known_resistance_signal` — none of this antibiotic's model-relevant features are present in
-  this sample at all.
+- `no_known_resistance_signal` — no direct or model-used resistance feature for this
+  antibiotic was detected in the available AMRFinderPlus-derived feature panel. This does **not**
+  prove that the genome contains no resistance mechanism at all; it only means that no relevant
+  signal was represented and detected in the features available to this model.
 
 The mapping of which features count as a "direct marker" per antibiotic is a small, hand-curated,
 pharmacology-based table (`ANTIBIOTIC_DIRECT_MARKER_SUBSTRINGS` in `score_resistance.py`) — every
 feature in our panel is technically a curated AMRFinderPlus resistance determinant (AMRFinderPlus
 doesn't report arbitrary statistical predictors), so the distinction here is specifically about
 mechanism-relevance to *this* drug, not about database provenance.
+
+The marker rules were checked against the exact feature names present in `feature_columns.json`.
+Broad matches such as `bla*` are intentional because they represent beta-lactamase families rather
+than one single gene. Any future extension of the feature panel should re-run this validation to
+ensure that no newly added feature is classified as a direct marker merely because it contains a
+similar substring. Where practical, exact-name or anchored family-prefix matching should be
+preferred over unrestricted substring matching.
 
 ## What each metric means
 

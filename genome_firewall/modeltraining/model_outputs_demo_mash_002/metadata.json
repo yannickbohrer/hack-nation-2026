@@ -1,5 +1,5 @@
 {
-  "created_at_utc": "2026-07-19T10:11:37.454975+00:00",
+  "created_at_utc": "2026-07-19T10:48:05.219934+00:00",
   "source_run": "/Users/Remes/Development/Projects/github/Hackathon_GenomeFirewall/hack-nation-2026/genome_firewall/modeltraining/model_outputs_final_mash_002",
   "split_variant": "mash_002",
   "strict_criteria_unchanged": true,
@@ -66,5 +66,13 @@
     "cluster_id",
     "split"
   ],
+  "supported_species": "Escherichia coli",
+  "reliability_plots_copied": [
+    "reliability_cephalothin.png",
+    "reliability_ciprofloxacin.png",
+    "reliability_nalidixic acid.png",
+    "reliability_trimethoprim_sulfamethoxazole.png"
+  ],
+  "metrics_by_cluster_written": true,
   "safety_warning": "Research prototype. Every prediction must be confirmed with standard laboratory susceptibility testing."
 }
