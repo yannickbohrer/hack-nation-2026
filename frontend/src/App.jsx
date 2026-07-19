@@ -1,29 +1,29 @@
-import { useState, useEffect } from "react";
-import Chat from "./components/Chat";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+import { useState } from "react";
+import Scanner from "./components/Scanner";
+import Landing from "./components/Landing";
+import Datasets from "./components/Datasets";
 
 function App() {
-  const [status, setStatus] = useState(null);
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/status`)
-      .then((r) => r.json())
-      .then((data) => setStatus(data.status))
-      .catch(() => setStatus("Backend not reachable"));
-  }, []);
+  const [currentPage, setCurrentPage] = useState("landing");
 
   return (
     <div className="app">
       <header className="app-header">
-        <h1>🚀 Hack-Nation</h1>
-        <div className={`status-badge ${status ? "status-badge--ok" : ""}`}>
-          {status || "Connecting..."}
-        </div>
+        <h1 onClick={() => setCurrentPage("landing")} style={{ cursor: "pointer" }}>
+          <img src="/superbugs.webp" alt="Genome Firewall Logo" className="app-logo" />
+          Genome Firewall
+        </h1>
+        <nav className="main-nav">
+          <button className={`nav-link ${currentPage === "landing" ? "active" : ""}`} onClick={() => setCurrentPage("landing")}>Vision 🚀</button>
+          <button className={`nav-link ${currentPage === "datasets" ? "active" : ""}`} onClick={() => setCurrentPage("datasets")}>Datasets</button>
+          <button className={`nav-link scan-nav-btn ${currentPage === "scanner" ? "active" : ""}`} onClick={() => setCurrentPage("scanner")}>Upload FASTA</button>
+        </nav>
       </header>
 
       <main className="app-main">
-        <Chat />
+        {currentPage === "landing" && <Landing onStart={() => setCurrentPage("scanner")} />}
+        {currentPage === "scanner" && <Scanner />}
+        {currentPage === "datasets" && <Datasets />}
       </main>
     </div>
   );
