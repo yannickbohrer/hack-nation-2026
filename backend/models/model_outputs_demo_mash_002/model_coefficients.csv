@@ -1,0 +1,5 @@
+antibiotic,feature,coefficient,direction
+ciprofloxacin,mut_gyrA_S83L,2.5,resistance_associated
+trimethoprim/sulfamethoxazole,gene_dfrA,3.0,resistance_associated
+cephalothin,gene_bla,2.0,resistance_associated
+nalidixic acid,mut_gyrA_S83L,2.2,resistance_associated
