@@ -5,7 +5,7 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Environment
+# Environment 
 .env
 
 # Build artifacts

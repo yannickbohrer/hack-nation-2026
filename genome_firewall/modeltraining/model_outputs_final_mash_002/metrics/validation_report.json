@@ -1,0 +1,23 @@
+{
+  "exact_feature_vector_overlap": {
+    "calibration_hidden_test": 62,
+    "train_calibration": 87,
+    "train_hidden_test": 74
+  },
+  "exact_genome_id_overlap": {
+    "calibration_hidden_test": 0,
+    "train_calibration": 0,
+    "train_hidden_test": 0
+  },
+  "genetic_group_column": "cluster_id",
+  "genetic_group_overlap": {
+    "calibration_hidden_test": 0,
+    "train_calibration": 0,
+    "train_hidden_test": 0
+  },
+  "genome_antibiotic_pair_overlap": {
+    "calibration_hidden_test": 0,
+    "train_calibration": 0,
+    "train_hidden_test": 0
+  }
+}
