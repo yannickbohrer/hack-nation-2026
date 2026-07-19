@@ -19,6 +19,7 @@ import argparse
 import logging
 import sys
 import json
+import pandas as pd
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -164,6 +165,18 @@ def run_pipeline_single(
     return pipeline_result
 
 
+# Module-level worker function (must be top-level for multiprocessing pickling)
+def _amrfinder_worker(args):
+    """Worker function for parallel AMRFinderPlus execution."""
+    fasta_file, amr_output_dir, organism, threads_per_job = args
+    return run_amrfinder(
+        fasta_path=fasta_file,
+        output_dir=amr_output_dir,
+        organism=organism,
+        threads=threads_per_job,
+    )
+
+
 def run_pipeline_batch(
     fasta_dir: str | Path,
     output_dir: str | Path,
@@ -243,18 +256,79 @@ def run_pipeline_batch(
     # ---------------------------------------------------------------
     logger.info(f"Step 2/3: Running AMRFinderPlus on {len(valid_fastas)} genomes")
     amr_output_dir = output_dir / "amrfinder_output"
+    amr_output_dir.mkdir(parents=True, exist_ok=True)
 
-    amr_results = []
-    for i, fasta_file in enumerate(valid_fastas, 1):
-        logger.info(f"  [{i}/{len(valid_fastas)}] {fasta_file.name}")
-        amr_result = run_amrfinder(
-            fasta_path=fasta_file,
-            output_dir=amr_output_dir,
-            organism=organism,
-            threads=threads,
-        )
-        amr_results.append(amr_result)
+    # Skip genomes that already have completed TSV output from prior runs
+    already_done = set()
+    for tsv_file in amr_output_dir.glob("*_amrfinder.tsv"):
+        if tsv_file.stat().st_size > 0:
+            # Extract genome ID from filename: "562.100065_amrfinder.tsv" -> "562.100065"
+            genome_id = tsv_file.stem.replace("_amrfinder", "")
+            already_done.add(genome_id)
 
+    to_process = []
+    cached_results = []
+    for fasta_file in valid_fastas:
+        genome_id = fasta_file.stem
+        if genome_id in already_done:
+            # Load cached result from existing TSV
+            tsv_path = amr_output_dir / f"{genome_id}_amrfinder.tsv"
+            cached_result = AMRFinderResult(
+                success=True,
+                fasta_path=str(fasta_file),
+                output_tsv_path=str(tsv_path),
+            )
+            # Re-parse the TSV to populate hits_df (required by feature_matrix_builder)
+            try:
+                df = pd.read_csv(str(tsv_path), sep="\t", dtype=str)
+                # Normalize column names (same as run_amrfinder does)
+                normalized = []
+                for c in df.columns:
+                    c = c.strip().lower().replace(" ", "_").replace("%_", "")
+                    c = c.lstrip("_")
+                    normalized.append(c)
+                df.columns = normalized
+                cached_result.hits_df = df
+                type_col = "type" if "type" in df.columns else "element_type"
+                subtype_col = "subtype" if "subtype" in df.columns else "element_subtype"
+                if type_col in df.columns:
+                    type_counts = df[type_col].value_counts()
+                    cached_result.num_amr_genes = int(type_counts.get("AMR", 0))
+                    cached_result.num_stress_genes = int(type_counts.get("STRESS", 0))
+                    cached_result.num_virulence_genes = int(type_counts.get("VIRULENCE", 0))
+                if subtype_col in df.columns:
+                    subtype_counts = df[subtype_col].value_counts()
+                    cached_result.num_point_mutations = int(subtype_counts.get("POINT", 0))
+            except Exception:
+                cached_result.hits_df = pd.DataFrame()
+            cached_results.append(cached_result)
+        else:
+            to_process.append(fasta_file)
+
+    if already_done:
+        logger.info(f"  Skipping {len(already_done)} genomes with existing results. {len(to_process)} remaining.")
+
+    # Parallel execution: 6 workers × 2 threads = 12 cores (leaves 4 free)
+    import multiprocessing
+
+    PARALLEL_JOBS = 6
+    THREADS_PER_JOB = 2
+
+    # Build argument tuples for the module-level worker function
+    worker_args = [(f, amr_output_dir, organism, THREADS_PER_JOB) for f in to_process]
+
+    new_results = []
+    if to_process:
+        logger.info(f"  Running {len(to_process)} genomes in parallel ({PARALLEL_JOBS} workers × {THREADS_PER_JOB} threads)")
+
+        with multiprocessing.Pool(processes=PARALLEL_JOBS) as pool:
+            for i, result in enumerate(pool.imap_unordered(_amrfinder_worker, worker_args), 1):
+                new_results.append(result)
+                if i % 50 == 0 or i == len(to_process):
+                    succeeded = sum(1 for r in new_results if r.success)
+                    logger.info(f"  Progress: {i}/{len(to_process)} processed. {succeeded} OK.")
+
+    amr_results = cached_results + new_results
     successful_amr = [r for r in amr_results if r.success]
     logger.info(
         f"AMRFinderPlus: {len(successful_amr)}/{len(amr_results)} succeeded"

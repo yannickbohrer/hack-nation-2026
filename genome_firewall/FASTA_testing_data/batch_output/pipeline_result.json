@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-07-18T20:49:31.573468+00:00",
+  "fasta_dir": "FASTA_testing_data",
+  "output_dir": "FASTA_testing_data/batch_output",
+  "organism": "Escherichia",
+  "mode": "batch",
+  "steps": {
+    "validation": {
+      "total_files": 6,
+      "valid_files": 5,
+      "invalid_files": 1
+    },
+    "amrfinder": {
+      "total_runs": 5,
+      "successful_runs": 5,
+      "failed_runs": 0
+    },
+    "feature_matrix": {
+      "success": true,
+      "matrix_path": "FASTA_testing_data/batch_output/features/feature_matrix.csv",
+      "metadata_path": "FASTA_testing_data/batch_output/features/feature_metadata.csv",
+      "num_samples": 5,
+      "num_features": 14,
+      "sparsity": 0.7142857142857143
+    }
+  },
+  "success": true
+}
