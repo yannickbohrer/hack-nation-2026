@@ -5,3 +5,10 @@ python-dotenv
 openai
 httpx
 sse-starlette
+scikit-learn>=1.3
+pandas>=2.0
+numpy>=1.24
+joblib
+biopython>=1.80
+pyarrow>=12.0
+python-multipart

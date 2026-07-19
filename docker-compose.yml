@@ -5,6 +5,9 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      - ./genome_firewall:/genome_firewall
+    environment:
+      - PYTHONPATH=/
     env_file:
       - .env
     healthcheck:
@@ -21,7 +24,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:8000
+      - VITE_API_URL=https://hack-nation-api.ybohrer.com
     depends_on:
       backend:
         condition: service_healthy
