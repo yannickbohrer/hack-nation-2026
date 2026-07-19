@@ -17,6 +17,15 @@ pipeline-01_outputs/
 pipeline-02_outputs/
 *.tsv
 *.csv
+*.msh
+*.png
+
+
+# Training input and output
+genome_firewall/modeltraining/processed_data/
+genome_firewall/modeltraining/model_outputs_final/
+genome_firewall/modeltraining/mash_preprocessed_data/
+
 
 # OS generated files
 .DS_Store

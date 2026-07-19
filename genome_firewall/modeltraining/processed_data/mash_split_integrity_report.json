@@ -1,0 +1,14 @@
+{
+  "mash_002": {
+    "threshold_label": "mash_002",
+    "zero_overlap_confirmed": true,
+    "genomes_in_multiple_splits": 0,
+    "genomes_in_multiple_splits_sample": [],
+    "columns_excluded_from_model_features": [
+      "antibiotic",
+      "cluster_id",
+      "genome_id",
+      "is_resistant"
+    ]
+  }
+}
