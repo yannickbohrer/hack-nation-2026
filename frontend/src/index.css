@@ -496,7 +496,7 @@ html, body {
   border-bottom: 1px solid rgba(5, 150, 105, 0.2);
 }
 
-.amr-table tr.row-winner .status-susceptible {
+.amr-table tr.row-winner .status-likely-to-work {
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(5, 150, 105, 0.3);
   color: #064e3b;
@@ -530,16 +530,27 @@ html, body {
 }
 
 /* Clean status indicators */
-.status-resistant {
+.status-likely-to-fail {
   color: var(--danger);
   background: var(--danger-bg);
   padding: 4px 10px;
   border-radius: 4px;
+  display: inline-block;
 }
 
-.status-susceptible {
+.status-likely-to-work {
   color: var(--success);
   background: var(--success-bg);
   padding: 4px 10px;
   border-radius: 4px;
+  display: inline-block;
 }
+
+.status-no-call {
+  color: #854d0e; /* Yellow/Orange */
+  background: #fef08a;
+  padding: 4px 10px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
