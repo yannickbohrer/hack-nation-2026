@@ -1,0 +1,70 @@
+{
+  "created_at_utc": "2026-07-19T10:11:37.454975+00:00",
+  "source_run": "/Users/Remes/Development/Projects/github/Hackathon_GenomeFirewall/hack-nation-2026/genome_firewall/modeltraining/model_outputs_final_mash_002",
+  "split_variant": "mash_002",
+  "strict_criteria_unchanged": true,
+  "demo_criteria_label": "demo_candidate \u2014 hackathon demo selection only, NOT a clinical or deployment claim",
+  "demo_criteria_rungs": [
+    {
+      "balanced_accuracy": 0.55,
+      "resistant_recall": 0.4,
+      "coverage": 0.2,
+      "called_accuracy": 0.8
+    },
+    {
+      "balanced_accuracy": 0.53,
+      "resistant_recall": 0.35,
+      "coverage": 0.15,
+      "called_accuracy": 0.75
+    },
+    {
+      "balanced_accuracy": 0.52,
+      "resistant_recall": 0.3,
+      "coverage": 0.1,
+      "called_accuracy": 0.7
+    },
+    {
+      "balanced_accuracy": 0.5,
+      "resistant_recall": 0.25,
+      "coverage": 0.05,
+      "called_accuracy": 0.65
+    }
+  ],
+  "demo_criteria_rung_used_index": 0,
+  "demo_criteria_rung_used_values": {
+    "balanced_accuracy": 0.55,
+    "resistant_recall": 0.4,
+    "coverage": 0.2,
+    "called_accuracy": 0.8
+  },
+  "demo_selection_mode": "threshold_rung",
+  "experimental_rank_weights": {
+    "balanced_accuracy": 0.3,
+    "resistant_recall": 0.25,
+    "pr_auc": 0.2,
+    "brier_score_inverted": 0.15,
+    "coverage": 0.05,
+    "called_accuracy": 0.05
+  },
+  "experimental_rank_formula": "score = 0.30*balanced_accuracy + 0.25*resistant_recall + 0.20*pr_auc + 0.15*(1 - min(brier_score, 1)) + 0.05*coverage + 0.05*called_accuracy; ties broken by larger n_test. Missing metrics treated as 0 (or brier=1.0, i.e. worst case) rather than dropped.",
+  "n_total_antibiotics": 63,
+  "n_base_models_trained": 23,
+  "n_calibrated_models": 23,
+  "n_strict_candidates": 0,
+  "n_demo_candidates": 4,
+  "n_experimental_demo_only": 0,
+  "usable_antibiotics": [
+    "cephalothin",
+    "ciprofloxacin",
+    "nalidixic acid",
+    "trimethoprim/sulfamethoxazole"
+  ],
+  "excluded_from_model_features": [
+    "genome_id",
+    "antibiotic",
+    "is_resistant",
+    "cluster_id",
+    "split"
+  ],
+  "safety_warning": "Research prototype. Every prediction must be confirmed with standard laboratory susceptibility testing."
+}
