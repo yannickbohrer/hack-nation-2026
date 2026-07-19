@@ -1,0 +1,1 @@
+Generalization by genetic group could not be evaluated because the supplied CSV files do not contain a recognized genetic-group identifier. The fixed organizer split was used, and no exact genome_id overlap was detected, but a cluster mapping is required for sequence-homology generalization reporting.
