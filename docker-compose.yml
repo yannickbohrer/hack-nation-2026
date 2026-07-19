@@ -19,10 +19,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "8080:5173"
     environment:
       - VITE_API_URL=https://hack-nation-api.ybohrer.com
     depends_on:

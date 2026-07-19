@@ -17,6 +17,13 @@ conda deactivate || true
 /home/yannick/Code/hack-nation/genome_firewall/.venv/bin/python module02_pipeline2.py --amr-db dataset/BVBRC_genome_amr_ecoli_full.csv --features pipeline-01_outputs/features/feature_matrix.csv --output pipeline-02_outputs/final_training_dataset.csv
 
 echo "========================================="
+echo "2.5. Running Mash Clustering..."
+echo "========================================="
+cd module02
+/home/yannick/Code/hack-nation/genome_firewall/.venv/bin/python mash_clustering.py
+cd ..
+
+echo "========================================="
 echo "3. Splitting Dataset (Train / Calib / Test)..."
 echo "========================================="
 cd module02
